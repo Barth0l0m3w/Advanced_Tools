@@ -131,6 +131,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2347044365899290475, guid: 5af1f0dff8df80e43a73cdbcd73ed4d5,
+        type: 3}
+      propertyPath: m_Name
+      value: water
+      objectReference: {fileID: 0}
     - target: {fileID: 3159750982308597201, guid: 5af1f0dff8df80e43a73cdbcd73ed4d5,
         type: 3}
       propertyPath: m_LocalPosition.x
