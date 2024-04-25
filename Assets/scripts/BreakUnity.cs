@@ -4,6 +4,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using NaughtyAttributes;
 using UnityEditor;
+using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine.Serialization;
 
 public class BreakUnity : MonoBehaviour
@@ -19,6 +20,7 @@ public class BreakUnity : MonoBehaviour
     [SerializeField] private GameObject location;
     List<Cell> board;
 
+    
     // Start is called before the first frame update
     void Generate()
     {
