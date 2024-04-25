@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System.Text;
+using System.Threading;
+using NaughtyAttributes;
 using UnityEngine.Profiling;
 using Object = System.Object;
 
@@ -44,12 +46,6 @@ public class InfoDump : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            Debug.Log("write to file activated");
-            WriteToFile();
-        }
-
         if (!active)
         {
             return;
@@ -73,7 +69,6 @@ public class InfoDump : MonoBehaviour
 
     private void DataAverage()
     {
-        StringBuilder builder = new();
         int sum = 0;
 
         foreach (var a in fpsList)
@@ -81,14 +76,17 @@ public class InfoDump : MonoBehaviour
             sum += a;
         }
 
-        Debug.Log(gpuTime);
-
         average = sum / dataSample;
+        Debug.Log(average);
+
         active = false;
     }
 
+    [Button]
     private void WriteToFile()
     {
+        Debug.Log("write to file");
+
         gridX = Mathf.FloorToInt(_breakUnity.size.x);
         gridX = Mathf.FloorToInt(_breakUnity.size.y);
 
@@ -100,9 +98,10 @@ public class InfoDump : MonoBehaviour
                      + ", " + average + ", " + gpuTime);
         tw.Close();
 
-        gpuTime = 0;
         testNumber += 1;
         fpsList.Clear(); //reset
         active = true;
+
+        _breakUnity.size = new Vector2(_breakUnity.size.x + 3, _breakUnity.size.y + 3); //update grid size
     }
 }
