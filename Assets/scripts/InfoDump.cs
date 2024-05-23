@@ -3,7 +3,6 @@ using UnityEngine;
 using System.IO;
 using System.Linq;
 using NaughtyAttributes;
-using UnityEngine.Serialization;
 
 public class InfoDump : MonoBehaviour
 {
@@ -38,8 +37,10 @@ public class InfoDump : MonoBehaviour
 
         //creating the file and filling in the headlines
         TextWriter tw = new StreamWriter(_dataPath, false);
-        tw.WriteLine("Test Number, ShadersTotal, FPS, GPU Usage");
+        tw.WriteLine("Test Number, ShadersTotal, FPS MIN, FPS MAX, FPS AVERAGE, GPU Usage");
         tw.Close();
+        
+        WriteToFile();
     }
 
     private void Update()
@@ -59,8 +60,8 @@ public class InfoDump : MonoBehaviour
             _minData = DataMinimum();
             _maxData = DataMaximum();
             
-            Debug.Log(_minData);
-            Debug.Log(_maxData);
+            Debug.Log("minimum data" + _minData);
+            Debug.Log("maximum data" +_maxData);
         }
         
         //gpu usage
@@ -107,7 +108,7 @@ public class InfoDump : MonoBehaviour
 
         TextWriter tw = new StreamWriter(_dataPath, true);
 
-        tw.WriteLine(testNumber + ", " + shadersTotal
+        tw.WriteLine(testNumber + ", " + shadersTotal+ ", " + _minData + ", " + _maxData + ", "
                      + ", " + _average + ", " + _gpuTime);
         tw.Close();
 
@@ -115,6 +116,6 @@ public class InfoDump : MonoBehaviour
         _fpsList.Clear(); //reset
         _active = true;
 
-        breakUnity.size = new Vector2(breakUnity.size.x + 3, breakUnity.size.y + 3); //update grid size
+        breakUnity.size = new Vector2(breakUnity.size.x + 5, breakUnity.size.y + 5); //update grid size
     }
 }
