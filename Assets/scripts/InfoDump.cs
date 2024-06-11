@@ -39,8 +39,6 @@ public class InfoDump : MonoBehaviour
         TextWriter tw = new StreamWriter(_dataPath, false);
         tw.WriteLine("Test Number, ShadersTotal, FPS MIN, FPS MAX, FPS AVERAGE, GPU Usage");
         tw.Close();
-        
-        WriteToFile();
     }
 
     private void Update()
@@ -59,11 +57,11 @@ public class InfoDump : MonoBehaviour
             DataAverage();
             _minData = DataMinimum();
             _maxData = DataMaximum();
-            
+
             Debug.Log("minimum data" + _minData);
-            Debug.Log("maximum data" +_maxData);
+            Debug.Log("maximum data" + _maxData);
         }
-        
+
         //gpu usage
         _currentFrameGpuTime = Time.realtimeSinceStartup;
         _gpuTime = (_currentFrameGpuTime - _lastFrameGpuTime) * 1000; // Convert to milliseconds
@@ -90,7 +88,7 @@ public class InfoDump : MonoBehaviour
     {
         return _fpsList.Min();
     }
-    
+
     private float DataMaximum()
     {
         return _fpsList.Max();
@@ -108,8 +106,8 @@ public class InfoDump : MonoBehaviour
 
         TextWriter tw = new StreamWriter(_dataPath, true);
 
-        tw.WriteLine(testNumber + ", " + shadersTotal+ ", " + _minData + ", " + _maxData + ", "
-                     + ", " + _average + ", " + _gpuTime);
+        tw.WriteLine(testNumber + ", " + shadersTotal + ", " + _minData + ", "
+                     + _maxData + ", " + _average + ", " + _gpuTime);
         tw.Close();
 
         testNumber += 1;
