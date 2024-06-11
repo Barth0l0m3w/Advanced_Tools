@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System.Linq;
 using NaughtyAttributes;
-using UnityEngine.Serialization;
 
 public class InfoDump : MonoBehaviour
 {
@@ -16,7 +16,7 @@ public class InfoDump : MonoBehaviour
     private bool _active;
     private bool _fileWritten;
 
-    private int _average;
+    private float _average;
     private int _gridX;
     private int _gridY;
 
@@ -24,17 +24,20 @@ public class InfoDump : MonoBehaviour
     private float _gpuTime;
     private float _currentFrameGpuTime;
 
-    private List<int> _fpsList;
+    private float _minData;
+    private float _maxData;
+
+    private List<float> _fpsList;
 
     private void Start()
     {
         _dataPath = Application.dataPath + "/" + nameCvs + ".csv";
-        _fpsList = new List<int>();
+        _fpsList = new List<float>();
         _active = true;
 
         //creating the file and filling in the headlines
         TextWriter tw = new StreamWriter(_dataPath, false);
-        tw.WriteLine("Test Number, ShadersTotal, FPS, GPU Usage");
+        tw.WriteLine("Test Number, ShadersTotal, FPS MIN, FPS MAX, FPS AVERAGE, GPU Usage");
         tw.Close();
     }
 
@@ -46,14 +49,19 @@ public class InfoDump : MonoBehaviour
         }
 
         //calculating the frames per second
-        int fps = Mathf.RoundToInt(1f / Time.deltaTime);
+        float fps = Mathf.RoundToInt(1f / Time.deltaTime); //float
         _fpsList.Add(fps);
 
         if (_fpsList.Count >= dataSample)
         {
             DataAverage();
+            _minData = DataMinimum();
+            _maxData = DataMaximum();
+
+            Debug.Log("minimum data" + _minData);
+            Debug.Log("maximum data" + _maxData);
         }
-        
+
         //gpu usage
         _currentFrameGpuTime = Time.realtimeSinceStartup;
         _gpuTime = (_currentFrameGpuTime - _lastFrameGpuTime) * 1000; // Convert to milliseconds
@@ -63,7 +71,7 @@ public class InfoDump : MonoBehaviour
 
     private void DataAverage()
     {
-        int sum = 0;
+        float sum = 0;
 
         foreach (var a in _fpsList)
         {
@@ -74,6 +82,16 @@ public class InfoDump : MonoBehaviour
         Debug.Log(_average);
 
         _active = false;
+    }
+
+    private float DataMinimum()
+    {
+        return _fpsList.Min();
+    }
+
+    private float DataMaximum()
+    {
+        return _fpsList.Max();
     }
 
     [Button]
@@ -88,14 +106,14 @@ public class InfoDump : MonoBehaviour
 
         TextWriter tw = new StreamWriter(_dataPath, true);
 
-        tw.WriteLine(testNumber + ", " + shadersTotal
-                     + ", " + _average + ", " + _gpuTime);
+        tw.WriteLine(testNumber + ", " + shadersTotal + ", " + _minData + ", "
+                     + _maxData + ", " + _average + ", " + _gpuTime);
         tw.Close();
 
         testNumber += 1;
         _fpsList.Clear(); //reset
         _active = true;
 
-        breakUnity.size = new Vector2(breakUnity.size.x + 3, breakUnity.size.y + 3); //update grid size
+        breakUnity.size = new Vector2(breakUnity.size.x + 5, breakUnity.size.y + 5); //update grid size
     }
 }
